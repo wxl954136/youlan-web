@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.site.mapper.WebMenuMapper">
+    
+    <resultMap type="WebMenu" id="WebMenuResult">
+        <result property="menuId"    column="menu_id"    />
+        <result property="menuName"    column="menu_name"    />
+        <result property="orderNum"    column="order_num"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectWebMenuVo">
+        select menu_id, menu_name, order_num, status, del_flag, create_by, create_time, update_by, update_time from web_menu
+    </sql>
+
+    <select id="selectWebMenuList" parameterType="WebMenu" resultMap="WebMenuResult">
+        <include refid="selectWebMenuVo"/>
+        <where>  
+            <if test="menuName != null  and menuName != ''"> and menu_name like concat('%', #{menuName}, '%')</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectWebMenuById" parameterType="Long" resultMap="WebMenuResult">
+        <include refid="selectWebMenuVo"/>
+        where menu_id = #{menuId}
+    </select>
+        
+    <insert id="insertWebMenu" parameterType="WebMenu" useGeneratedKeys="true" keyProperty="menuId">
+        insert into web_menu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="menuName != null">menu_name,</if>
+            <if test="orderNum != null">order_num,</if>
+            <if test="status != null">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="menuName != null">#{menuName},</if>
+            <if test="orderNum != null">#{orderNum},</if>
+            <if test="status != null">#{status},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWebMenu" parameterType="WebMenu">
+        update web_menu
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="menuName != null">menu_name = #{menuName},</if>
+            <if test="orderNum != null">order_num = #{orderNum},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where menu_id = #{menuId}
+    </update>
+
+    <delete id="deleteWebMenuById" parameterType="Long">
+        delete from web_menu where menu_id = #{menuId}
+    </delete>
+
+    <delete id="deleteWebMenuByIds" parameterType="String">
+        delete from web_menu where menu_id in 
+        <foreach item="menuId" collection="array" open="(" separator="," close=")">
+            #{menuId}
+        </foreach>
+    </delete>
+
+</mapper>
